@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseProgramming", "DatabaseProgramming\DatabaseProgramming.csproj", "{C649B64B-C6E6-4046-A5C6-AB513D8505C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseProgramming-MockDatabase+CourseList", "DatabaseProgramming\DatabaseProgramming-MockDatabase+CourseList.csproj", "{C649B64B-C6E6-4046-A5C6-AB513D8505C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
