@@ -13,21 +13,33 @@ namespace Courses
         private int coursePoints;
         private DateTime startDate;
         private DateTime endDate;
-        private List<PolhemStudent> students;
-        private PolhemTeacher teacher;
+        public List<PolhemStudent> CourseStudents; //Kunde inte fundera ut hur man lade till setters och getters på en list
+        public List<PolhemTeacher> CourseTeachers;
 
-        public PolhemCourse (string name, string courseCode, int coursePoints, DateTime startDate, DateTime endDate, PolhemTeacher teacher, List<PolhemStudent> students = null)
+        public PolhemCourse (string name, string courseCode, int coursePoints, DateTime startDate, DateTime endDate, List<PolhemTeacher> teachers = null, List<PolhemStudent> students = null)
         {
             CourseName = name;
             CourseCode = courseCode;
             CoursePoints = coursePoints;
             CourseStartDate = startDate;
             CourseEndDate = endDate;
-            CourseTeacher = teacher;
+
+            if (teachers != null)
+            {
+                CourseTeachers = teachers;
+            } 
+            else
+            {
+                CourseTeachers = new List<PolhemTeacher>();
+            }
 
             if (students != null)
             {
                 CourseStudents = students;
+            }
+            else
+            {
+                CourseStudents = new List<PolhemStudent>();
             }
         }
 
@@ -91,7 +103,7 @@ namespace Courses
             }
         }
 
-        public List<PolhemStudent> CourseStudents
+        /*public List<PolhemStudent> CourseStudents
         {
             get
             {
@@ -103,7 +115,7 @@ namespace Courses
             }
         }
 
-        public PolhemTeacher CourseTeacher
+        public List<PolhemTeacher> CourseTeachers
         {
             get
             {
@@ -113,7 +125,7 @@ namespace Courses
             {
                 teacher = value;
             }
-        }
+        }*/
 
         public PolhemStudent CourseStudent (int number)
         {

@@ -11,12 +11,14 @@ namespace Courses
         private string name;
         private string code;
         private string email;
+        private string phone;
 
-        public PolhemTeacher (string name, string code, string email)
+        public PolhemTeacher (string name, string code, string email, string phone)
         {
             TeacherName = name;
             TeacherCode = code;
             TeacherEmail = email;
+            TeacherPhone = phone;
         }
 
         public string TeacherName
@@ -52,6 +54,18 @@ namespace Courses
             set
             {
                 email = value;
+            }
+        }
+
+        public string TeacherPhone
+        {
+            get
+            {
+                return phone;
+            }
+            set
+            {
+                phone = value;
             }
         }
     }
