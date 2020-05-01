@@ -27,26 +27,40 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             getData();
 
             updateGUI();
+
+            foreach (Control x in gbxCourse.Controls)
+            {
+                if (x is TextBox)
+                {
+                    ((TextBox)x).ReadOnly = true;
+                    ((TextBox)x).BackColor = SystemColors.Window;
+                }
+            }
+
+            foreach (Control x in gbxStudent.Controls)
+            {
+                if (x is TextBox)
+                {
+                    ((TextBox)x).ReadOnly = true;
+                    ((TextBox)x).BackColor = SystemColors.Window;
+                }
+            }
+
+            foreach (Control x in gbxTeacher.Controls)
+            {
+                if (x is TextBox)
+                {
+                    ((TextBox)x).ReadOnly = true;
+                    ((TextBox)x).BackColor = SystemColors.Window;
+                }
+            }
         }
-
-        /*private void mockDatabasePopulation ()
-        {
-            PolhemTeacher tmpTeacher1 = new PolhemTeacher("Hampus Åhlander", "AHH", "hampus.ahlander@skola.lund.se");
-            PolhemTeacher tmpTeacher2 = new PolhemTeacher("Malte Dahlgren", "DAM", "malte.dahlgren@skola.lund.se");
-            PolhemTeacher tmpTeacher3 = new PolhemTeacher("August Molander", "MOA", "august.molander@skola.lund.se");
-
-            PolhemCourse tmpCourse1 = new PolhemCourse("Programmering 1", "PRG01", 100, DateTime.Parse("1990-12-13"), DateTime.Parse("2016-03-02"), tmpTeacher1);
-            PolhemCourse tmpCourse2 = new PolhemCourse("Webbutveckling 1", "WEB01", 100, DateTime.Parse("1997-06-24"), DateTime.Parse("2001-03-18"), tmpTeacher2);
-            PolhemCourse tmpCourse3 = new PolhemCourse("Teknik 1", "TEK01", 100, DateTime.Parse("2017-08-10"), DateTime.Parse("2018-06-09"), tmpTeacher3);
-
-            courseList.Add(tmpCourse1);
-            courseList.Add(tmpCourse2);
-            courseList.Add(tmpCourse3);
-        }*/
 
         private void getData ()
         {
             courseList.Clear();
+            studentList.Clear();
+            teacherList.Clear();
 
             string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
             MySqlConnection dbCourse = new MySqlConnection(connectionString);
@@ -119,6 +133,52 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
             rdrCourse.Close();
             dbCourse.Close();
+
+            MySqlConnection dbTeachers = new MySqlConnection(connectionString);
+            dbTeachers.Open();
+
+            MySqlCommand cmdTeachers = new MySqlCommand("SELECT * FROM teachers;", dbTeachers);
+            MySqlDataReader rdrTeachers = cmdTeachers.ExecuteReader();
+
+            if (rdrTeachers.HasRows)
+            {
+                while (rdrTeachers.Read())
+                {
+                    string tmpTeacherName = rdrTeachers["name"].ToString();
+                    string tmpTeacherCode = rdrTeachers["code"].ToString();
+                    string tmpTeacherEmail = rdrTeachers["email"].ToString();
+                    string tmpTeacherPhone = rdrTeachers["phone"].ToString();
+
+                    PolhemTeacher tmpTeacher = new PolhemTeacher(tmpTeacherName, tmpTeacherCode, tmpTeacherEmail, tmpTeacherPhone);
+                    teacherList.Add(tmpTeacher);
+                }
+            }
+
+            rdrTeachers.Close();
+            dbTeachers.Close();
+
+            MySqlConnection dbStudents = new MySqlConnection(connectionString);
+            dbStudents.Open();
+
+            MySqlCommand cmdStudents = new MySqlCommand("SELECT * FROM students;", dbStudents);
+            MySqlDataReader rdrStudents = cmdStudents.ExecuteReader();
+
+            if (rdrStudents.HasRows)
+            {
+                while (rdrStudents.Read())
+                {
+                    string tmpStudentName = rdrStudents["name"].ToString();
+                    string tmpStudentClass = rdrStudents["class"].ToString();
+                    string tmpStudentEmail = rdrStudents["email"].ToString();
+                    string tmpStundentPhone = rdrStudents["phone"].ToString();
+
+                    PolhemStudent tmpStudent = new PolhemStudent(tmpStudentName, tmpStudentClass, tmpStudentEmail, tmpStundentPhone);
+                    studentList.Add(tmpStudent);
+                }
+            }
+
+            rdrStudents.Close();
+            dbStudents.Close();
         }
 
         private void updateCourseData (List<PolhemCourse> courseList, int selectedIndex)
@@ -238,11 +298,235 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
             isInitDone = true;
         }
-
-        private void btnUpdateData_Click(object sender, EventArgs e)
+        private void btnRefreshData_Click(object sender, EventArgs e)
         {
             getData();
             updateGUI();
+        }
+
+        private void btnUpdateCourse_Click(object sender, EventArgs e)
+        {
+            PolhemCourse tmpCourse = null;
+            for (int i = 0; i < courseList.Count; i++)
+            {
+                if (courseList[i].CourseName == lbxCourses.SelectedItem.ToString())
+                {
+                    tmpCourse = courseList[i];
+                    break;
+                }
+            }
+
+            using (var updateItem = new UpdateItem("course", tmpCourse))
+            {
+                updateItem.ShowDialog();
+            }
+
+            getData();
+            updateGUI();
+        }
+
+        private void btnUpdateTeacher_Click(object sender, EventArgs e)
+        {
+            PolhemTeacher tmpTeacher = null;
+            for (int i = 0; i < teacherList.Count; i++)
+            {
+                if (teacherList[i].TeacherName == lbxTeachers.SelectedItem.ToString())
+                {
+                    tmpTeacher = teacherList[i];
+                    break;
+                }
+            }
+
+            using (var updateItem = new UpdateItem("teacher", null, null, tmpTeacher))
+            {
+                updateItem.ShowDialog();
+            }
+
+            getData();
+            updateGUI();
+        }
+
+        private void btnUpdateStudent_Click(object sender, EventArgs e)
+        {
+            PolhemStudent tmpStudent = null;
+            for (int i = 0; i < studentList.Count; i++)
+            {
+                if (studentList[i].StudentName == lbxStudents.SelectedItem.ToString())
+                {
+                    tmpStudent = studentList[i];
+                    break;
+                }
+            }
+            using (var updateItem = new UpdateItem("student", null, tmpStudent))
+            {
+                updateItem.ShowDialog();
+            }
+
+            getData();
+            updateGUI();
+        }
+
+        private void btnAddCourse_Click(object sender, EventArgs e)
+        {
+            using (var addItem = new AddItem("course"))
+            {
+                addItem.ShowDialog();
+            }
+        }
+
+        private void btnAddTeacher_Click(object sender, EventArgs e)
+        {
+            using (var addItem = new AddItem("teacher"))
+            {
+                addItem.ShowDialog();
+            }
+        }
+
+        private void btnAddStudent_Click(object sender, EventArgs e)
+        {
+            using (var addItem = new AddItem("student"))
+            {
+                addItem.ShowDialog();
+            }
+        }
+
+        private void btnRemoveTeacher_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxTeachers.SelectedItem.ToString() + " från skolan?", "Ta bort lärare", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Yes)
+            {
+                PolhemTeacher tmpTeacher = null;
+                for (int i = 0; i < teacherList.Count; i++)
+                {
+                    if (teacherList[i].TeacherName == lbxTeachers.SelectedItem.ToString())
+                    {
+                        tmpTeacher = teacherList[i];
+                        break;
+                    }
+                }
+
+                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                MySqlConnection deleteConnection = new MySqlConnection(connectionString);
+                deleteConnection.Open();
+
+                MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM teachercourses WHERE teacher_id = (SELECT id FROM teachers WHERE name='" + tmpTeacher.TeacherName +"' AND email='" + tmpTeacher.TeacherEmail + "');", deleteConnection);
+                MySqlCommand deleteTeacher = new MySqlCommand("DELETE FROM teachers WHERE name = '" + tmpTeacher.TeacherName +"' AND email = '" + tmpTeacher.TeacherEmail + "'); ", deleteConnection);
+
+                int affectedCourses = deleteCmd.ExecuteNonQuery();
+                int affectedTeachers = deleteTeacher.ExecuteNonQuery();
+
+                deleteConnection.Close();
+
+                MessageBox.Show(this, "Tog bort " + affectedTeachers.ToString() + " lärare, och påverkade " + affectedCourses.ToString() + " kurser.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            }
+            else
+            {
+                MessageBox.Show(this, "Läraren har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void btnRemoveStudent_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxStudents.SelectedItem.ToString() + " från skolan?", "Ta bort elev", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Yes)
+            {
+                PolhemStudent tmpStudent = null;
+                for (int i = 0; i < studentList.Count; i++)
+                {
+                    if (studentList[i].StudentName == lbxStudents.SelectedItem.ToString())
+                    {
+                        tmpStudent = studentList[i];
+                        break;
+                    }
+                }
+
+                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                MySqlConnection deleteConnection = new MySqlConnection(connectionString);
+                deleteConnection.Open();
+
+                MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM coursestudents WHERE students_id = (SELECT id FROM students WHERE name='" + tmpStudent.StudentName + "' AND email='" + tmpStudent.StudentEmail + "');", deleteConnection);
+                MySqlCommand deleteStudent = new MySqlCommand("DELETE FROM students WHERE name = '" + tmpStudent.StudentName + "' AND email = '" + tmpStudent.StudentEmail + "'); ", deleteConnection);
+
+                int affectedCourses = deleteCmd.ExecuteNonQuery();
+                int affectedTeachers = deleteStudent.ExecuteNonQuery();
+
+                deleteConnection.Close();
+
+                MessageBox.Show(this, "Tog bort " + affectedTeachers.ToString() + " elever, och påverkade " + affectedCourses.ToString() + " kurser.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            }
+            else
+            {
+                MessageBox.Show(this, "Eleven har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void btnUpdateTeacherBelonging_Click(object sender, EventArgs e)
+        {
+            using (var changeBelonging = new ChangeCourseBelonging("teacher"))
+            {
+                changeBelonging.ShowDialog();
+            }
+        }
+
+        private void btnUpdateStudentBelonging_Click(object sender, EventArgs e)
+        {
+            using (var changeBelonging = new ChangeCourseBelonging("student"))
+            {
+                changeBelonging.ShowDialog();
+            }
+        }
+
+        private void btnUpdateClassBelonging_Click(object sender, EventArgs e)
+        {
+            using (var changeBelonging = new ChangeCourseBelonging("class"))
+            {
+                changeBelonging.ShowDialog();
+            }
+        }
+
+        private void btnRemoveCourse_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxCourses.SelectedItem.ToString() + " från skolan?", "Ta bort kurs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Yes)
+            {
+                PolhemCourse tmpCourse = null;
+                for (int i = 0; i < courseList.Count; i++)
+                {
+                    if (courseList[i].CourseName == lbxCourses.SelectedItem.ToString())
+                    {
+                        tmpCourse = courseList[i];
+                        break;
+                    }
+                }
+
+                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                MySqlConnection deleteConnection = new MySqlConnection(connectionString);
+                deleteConnection.Open();
+
+                MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM coursestudents WHERE courses_id = (SELECT id FROM courses WHERE name='" + tmpCourse.CourseName + "' AND code='" + tmpCourse.CourseCode + "');", deleteConnection);
+                MySqlCommand deleteCmd2 = new MySqlCommand("DELETE FROM teachercourses WHERE course_id = (SELECT id FROM courses WHERE name='" + tmpCourse.CourseName + "' AND code='" + tmpCourse.CourseCode + "');", deleteConnection);
+                MySqlCommand deleteCourse = new MySqlCommand("DELETE FROM courses WHERE name = '" + tmpCourse.CourseName + "' AND code = '" + tmpCourse.CourseCode + "'); ", deleteConnection);
+
+                int affectedStudents = deleteCmd.ExecuteNonQuery();
+                int affectedTeachers = deleteCmd2.ExecuteNonQuery();
+                int affectedCourses = deleteCourse.ExecuteNonQuery();
+
+                deleteConnection.Close();
+
+                MessageBox.Show(this, "Tog bort " + affectedCourses.ToString() + " kurser, och påverkade " + affectedTeachers.ToString() + " lärare och " + affectedStudents.ToString() + " elever.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            }
+            else
+            {
+                MessageBox.Show(this, "Kursen har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void btnUpdateStudentClassBelongings_Click(object sender, EventArgs e)
+        {
+            using (var changeBelongingClass = new ChangeCourseBelongingStudent())
+            {
+                changeBelongingClass.ShowDialog();
+            }
         }
     }
 }

@@ -42,6 +42,8 @@
             this.lblCourseCode = new System.Windows.Forms.Label();
             this.lblCourseName = new System.Windows.Forms.Label();
             this.gbxTeacher = new System.Windows.Forms.GroupBox();
+            this.tbxTeacherPhoneNr = new System.Windows.Forms.TextBox();
+            this.lblTeacherPhone = new System.Windows.Forms.Label();
             this.tbxTeacherEmail = new System.Windows.Forms.TextBox();
             this.tbxTeacherCode = new System.Windows.Forms.TextBox();
             this.tbxTeacherName = new System.Windows.Forms.TextBox();
@@ -49,6 +51,8 @@
             this.lblTeacherCode = new System.Windows.Forms.Label();
             this.lblTeacherName = new System.Windows.Forms.Label();
             this.gbxStudent = new System.Windows.Forms.GroupBox();
+            this.tbxStudentPhoneNr = new System.Windows.Forms.TextBox();
+            this.lblStudentPhone = new System.Windows.Forms.Label();
             this.tbxStudentEmail = new System.Windows.Forms.TextBox();
             this.tbxStudentClass = new System.Windows.Forms.TextBox();
             this.tbxStudentName = new System.Windows.Forms.TextBox();
@@ -61,11 +65,20 @@
             this.lbxStudents = new System.Windows.Forms.ListBox();
             this.lbxTeachers = new System.Windows.Forms.ListBox();
             this.lblTeachers = new System.Windows.Forms.Label();
-            this.lblTeacherPhone = new System.Windows.Forms.Label();
-            this.tbxTeacherPhoneNr = new System.Windows.Forms.TextBox();
-            this.lblStudentPhone = new System.Windows.Forms.Label();
-            this.tbxStudentPhoneNr = new System.Windows.Forms.TextBox();
-            this.btnUpdateData = new System.Windows.Forms.Button();
+            this.btnRefreshData = new System.Windows.Forms.Button();
+            this.btnUpdateCourse = new System.Windows.Forms.Button();
+            this.btnUpdateTeacher = new System.Windows.Forms.Button();
+            this.btnUpdateStudent = new System.Windows.Forms.Button();
+            this.btnUpdateTeacherBelonging = new System.Windows.Forms.Button();
+            this.btnUpdateStudentBelonging = new System.Windows.Forms.Button();
+            this.btnRemoveStudent = new System.Windows.Forms.Button();
+            this.btnRemoveTeacher = new System.Windows.Forms.Button();
+            this.btnAddCourse = new System.Windows.Forms.Button();
+            this.btnAddTeacher = new System.Windows.Forms.Button();
+            this.btnAddStudent = new System.Windows.Forms.Button();
+            this.btnUpdateClassBelonging = new System.Windows.Forms.Button();
+            this.btnRemoveCourse = new System.Windows.Forms.Button();
+            this.btnUpdateStudentClassBelongings = new System.Windows.Forms.Button();
             this.gbxCourse.SuspendLayout();
             this.gbxTeacher.SuspendLayout();
             this.gbxStudent.SuspendLayout();
@@ -198,12 +211,28 @@
             this.gbxTeacher.Controls.Add(this.lblTeacherEmail);
             this.gbxTeacher.Controls.Add(this.lblTeacherCode);
             this.gbxTeacher.Controls.Add(this.lblTeacherName);
-            this.gbxTeacher.Location = new System.Drawing.Point(461, 14);
+            this.gbxTeacher.Location = new System.Drawing.Point(546, 14);
             this.gbxTeacher.Name = "gbxTeacher";
             this.gbxTeacher.Size = new System.Drawing.Size(365, 162);
             this.gbxTeacher.TabIndex = 2;
             this.gbxTeacher.TabStop = false;
             this.gbxTeacher.Text = "Lärare";
+            // 
+            // tbxTeacherPhoneNr
+            // 
+            this.tbxTeacherPhoneNr.Location = new System.Drawing.Point(18, 124);
+            this.tbxTeacherPhoneNr.Name = "tbxTeacherPhoneNr";
+            this.tbxTeacherPhoneNr.Size = new System.Drawing.Size(329, 20);
+            this.tbxTeacherPhoneNr.TabIndex = 7;
+            // 
+            // lblTeacherPhone
+            // 
+            this.lblTeacherPhone.AutoSize = true;
+            this.lblTeacherPhone.Location = new System.Drawing.Point(18, 108);
+            this.lblTeacherPhone.Name = "lblTeacherPhone";
+            this.lblTeacherPhone.Size = new System.Drawing.Size(80, 13);
+            this.lblTeacherPhone.TabIndex = 6;
+            this.lblTeacherPhone.Text = "Telefonnummer";
             // 
             // tbxTeacherEmail
             // 
@@ -263,12 +292,28 @@
             this.gbxStudent.Controls.Add(this.lblStudentEmail);
             this.gbxStudent.Controls.Add(this.lblStudentClass);
             this.gbxStudent.Controls.Add(this.lblStudentName);
-            this.gbxStudent.Location = new System.Drawing.Point(461, 179);
+            this.gbxStudent.Location = new System.Drawing.Point(546, 182);
             this.gbxStudent.Name = "gbxStudent";
             this.gbxStudent.Size = new System.Drawing.Size(365, 151);
             this.gbxStudent.TabIndex = 3;
             this.gbxStudent.TabStop = false;
             this.gbxStudent.Text = "Elev";
+            // 
+            // tbxStudentPhoneNr
+            // 
+            this.tbxStudentPhoneNr.Location = new System.Drawing.Point(18, 124);
+            this.tbxStudentPhoneNr.Name = "tbxStudentPhoneNr";
+            this.tbxStudentPhoneNr.Size = new System.Drawing.Size(329, 20);
+            this.tbxStudentPhoneNr.TabIndex = 7;
+            // 
+            // lblStudentPhone
+            // 
+            this.lblStudentPhone.AutoSize = true;
+            this.lblStudentPhone.Location = new System.Drawing.Point(18, 108);
+            this.lblStudentPhone.Name = "lblStudentPhone";
+            this.lblStudentPhone.Size = new System.Drawing.Size(80, 13);
+            this.lblStudentPhone.TabIndex = 6;
+            this.lblStudentPhone.Text = "Telefonnummer";
             // 
             // tbxStudentEmail
             // 
@@ -321,7 +366,7 @@
             // lblCourse
             // 
             this.lblCourse.AutoSize = true;
-            this.lblCourse.Location = new System.Drawing.Point(248, 13);
+            this.lblCourse.Location = new System.Drawing.Point(288, 14);
             this.lblCourse.Name = "lblCourse";
             this.lblCourse.Size = new System.Drawing.Size(37, 13);
             this.lblCourse.TabIndex = 4;
@@ -330,7 +375,7 @@
             // lblStudents
             // 
             this.lblStudents.AutoSize = true;
-            this.lblStudents.Location = new System.Drawing.Point(248, 219);
+            this.lblStudents.Location = new System.Drawing.Point(288, 220);
             this.lblStudents.Name = "lblStudents";
             this.lblStudents.Size = new System.Drawing.Size(37, 13);
             this.lblStudents.TabIndex = 5;
@@ -339,7 +384,7 @@
             // lbxCourses
             // 
             this.lbxCourses.FormattingEnabled = true;
-            this.lbxCourses.Location = new System.Drawing.Point(251, 30);
+            this.lbxCourses.Location = new System.Drawing.Point(291, 31);
             this.lbxCourses.Name = "lbxCourses";
             this.lbxCourses.Size = new System.Drawing.Size(171, 95);
             this.lbxCourses.TabIndex = 6;
@@ -348,7 +393,7 @@
             // lbxStudents
             // 
             this.lbxStudents.FormattingEnabled = true;
-            this.lbxStudents.Location = new System.Drawing.Point(251, 235);
+            this.lbxStudents.Location = new System.Drawing.Point(291, 236);
             this.lbxStudents.Name = "lbxStudents";
             this.lbxStudents.Size = new System.Drawing.Size(171, 95);
             this.lbxStudents.TabIndex = 7;
@@ -357,7 +402,7 @@
             // lbxTeachers
             // 
             this.lbxTeachers.FormattingEnabled = true;
-            this.lbxTeachers.Location = new System.Drawing.Point(251, 146);
+            this.lbxTeachers.Location = new System.Drawing.Point(291, 147);
             this.lbxTeachers.Name = "lbxTeachers";
             this.lbxTeachers.Size = new System.Drawing.Size(171, 69);
             this.lbxTeachers.TabIndex = 8;
@@ -366,60 +411,171 @@
             // lblTeachers
             // 
             this.lblTeachers.AutoSize = true;
-            this.lblTeachers.Location = new System.Drawing.Point(248, 127);
+            this.lblTeachers.Location = new System.Drawing.Point(288, 128);
             this.lblTeachers.Name = "lblTeachers";
             this.lblTeachers.Size = new System.Drawing.Size(37, 13);
             this.lblTeachers.TabIndex = 9;
             this.lblTeachers.Text = "Lärare";
             // 
-            // lblTeacherPhone
+            // btnRefreshData
             // 
-            this.lblTeacherPhone.AutoSize = true;
-            this.lblTeacherPhone.Location = new System.Drawing.Point(18, 108);
-            this.lblTeacherPhone.Name = "lblTeacherPhone";
-            this.lblTeacherPhone.Size = new System.Drawing.Size(80, 13);
-            this.lblTeacherPhone.TabIndex = 6;
-            this.lblTeacherPhone.Text = "Telefonnummer";
+            this.btnRefreshData.Location = new System.Drawing.Point(13, 336);
+            this.btnRefreshData.Name = "btnRefreshData";
+            this.btnRefreshData.Size = new System.Drawing.Size(127, 25);
+            this.btnRefreshData.TabIndex = 10;
+            this.btnRefreshData.Text = "Hämta Data";
+            this.btnRefreshData.UseVisualStyleBackColor = true;
+            this.btnRefreshData.Click += new System.EventHandler(this.btnRefreshData_Click);
             // 
-            // tbxTeacherPhoneNr
+            // btnUpdateCourse
             // 
-            this.tbxTeacherPhoneNr.Location = new System.Drawing.Point(18, 124);
-            this.tbxTeacherPhoneNr.Name = "tbxTeacherPhoneNr";
-            this.tbxTeacherPhoneNr.Size = new System.Drawing.Size(329, 20);
-            this.tbxTeacherPhoneNr.TabIndex = 7;
+            this.btnUpdateCourse.Location = new System.Drawing.Point(146, 336);
+            this.btnUpdateCourse.Name = "btnUpdateCourse";
+            this.btnUpdateCourse.Size = new System.Drawing.Size(99, 23);
+            this.btnUpdateCourse.TabIndex = 11;
+            this.btnUpdateCourse.Text = "Uppdatera Kurs";
+            this.btnUpdateCourse.UseVisualStyleBackColor = true;
+            this.btnUpdateCourse.Click += new System.EventHandler(this.btnUpdateCourse_Click);
             // 
-            // lblStudentPhone
+            // btnUpdateTeacher
             // 
-            this.lblStudentPhone.AutoSize = true;
-            this.lblStudentPhone.Location = new System.Drawing.Point(18, 108);
-            this.lblStudentPhone.Name = "lblStudentPhone";
-            this.lblStudentPhone.Size = new System.Drawing.Size(80, 13);
-            this.lblStudentPhone.TabIndex = 6;
-            this.lblStudentPhone.Text = "Telefonnummer";
+            this.btnUpdateTeacher.Location = new System.Drawing.Point(251, 336);
+            this.btnUpdateTeacher.Name = "btnUpdateTeacher";
+            this.btnUpdateTeacher.Size = new System.Drawing.Size(113, 23);
+            this.btnUpdateTeacher.TabIndex = 12;
+            this.btnUpdateTeacher.Text = "Uppdatera Lärare";
+            this.btnUpdateTeacher.UseVisualStyleBackColor = true;
+            this.btnUpdateTeacher.Click += new System.EventHandler(this.btnUpdateTeacher_Click);
             // 
-            // tbxStudentPhoneNr
+            // btnUpdateStudent
             // 
-            this.tbxStudentPhoneNr.Location = new System.Drawing.Point(18, 124);
-            this.tbxStudentPhoneNr.Name = "tbxStudentPhoneNr";
-            this.tbxStudentPhoneNr.Size = new System.Drawing.Size(329, 20);
-            this.tbxStudentPhoneNr.TabIndex = 7;
+            this.btnUpdateStudent.Location = new System.Drawing.Point(370, 336);
+            this.btnUpdateStudent.Name = "btnUpdateStudent";
+            this.btnUpdateStudent.Size = new System.Drawing.Size(92, 23);
+            this.btnUpdateStudent.TabIndex = 13;
+            this.btnUpdateStudent.Text = "Uppdatera Elev";
+            this.btnUpdateStudent.UseVisualStyleBackColor = true;
+            this.btnUpdateStudent.Click += new System.EventHandler(this.btnUpdateStudent_Click);
             // 
-            // btnUpdateData
+            // btnUpdateTeacherBelonging
             // 
-            this.btnUpdateData.Location = new System.Drawing.Point(13, 336);
-            this.btnUpdateData.Name = "btnUpdateData";
-            this.btnUpdateData.Size = new System.Drawing.Size(813, 25);
-            this.btnUpdateData.TabIndex = 10;
-            this.btnUpdateData.Text = "Uppdatera Data";
-            this.btnUpdateData.UseVisualStyleBackColor = true;
-            this.btnUpdateData.Click += new System.EventHandler(this.btnUpdateData_Click);
+            this.btnUpdateTeacherBelonging.Location = new System.Drawing.Point(13, 367);
+            this.btnUpdateTeacherBelonging.Name = "btnUpdateTeacherBelonging";
+            this.btnUpdateTeacherBelonging.Size = new System.Drawing.Size(190, 23);
+            this.btnUpdateTeacherBelonging.TabIndex = 14;
+            this.btnUpdateTeacherBelonging.Text = "Uppdatera Lärares Kurstillhörigheter";
+            this.btnUpdateTeacherBelonging.UseVisualStyleBackColor = true;
+            this.btnUpdateTeacherBelonging.Click += new System.EventHandler(this.btnUpdateTeacherBelonging_Click);
+            // 
+            // btnUpdateStudentBelonging
+            // 
+            this.btnUpdateStudentBelonging.Location = new System.Drawing.Point(209, 367);
+            this.btnUpdateStudentBelonging.Name = "btnUpdateStudentBelonging";
+            this.btnUpdateStudentBelonging.Size = new System.Drawing.Size(180, 23);
+            this.btnUpdateStudentBelonging.TabIndex = 15;
+            this.btnUpdateStudentBelonging.Text = "Uppdatera Elevs Kurstillhörigheter";
+            this.btnUpdateStudentBelonging.UseVisualStyleBackColor = true;
+            this.btnUpdateStudentBelonging.Click += new System.EventHandler(this.btnUpdateStudentBelonging_Click);
+            // 
+            // btnRemoveStudent
+            // 
+            this.btnRemoveStudent.Location = new System.Drawing.Point(675, 367);
+            this.btnRemoveStudent.Name = "btnRemoveStudent";
+            this.btnRemoveStudent.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveStudent.TabIndex = 16;
+            this.btnRemoveStudent.Text = "Ta bort Elev";
+            this.btnRemoveStudent.UseVisualStyleBackColor = true;
+            this.btnRemoveStudent.Click += new System.EventHandler(this.btnRemoveStudent_Click);
+            // 
+            // btnRemoveTeacher
+            // 
+            this.btnRemoveTeacher.Location = new System.Drawing.Point(577, 367);
+            this.btnRemoveTeacher.Name = "btnRemoveTeacher";
+            this.btnRemoveTeacher.Size = new System.Drawing.Size(92, 23);
+            this.btnRemoveTeacher.TabIndex = 19;
+            this.btnRemoveTeacher.Text = "Ta bort Lärare";
+            this.btnRemoveTeacher.UseVisualStyleBackColor = true;
+            this.btnRemoveTeacher.Click += new System.EventHandler(this.btnRemoveTeacher_Click);
+            // 
+            // btnAddCourse
+            // 
+            this.btnAddCourse.Location = new System.Drawing.Point(468, 336);
+            this.btnAddCourse.Name = "btnAddCourse";
+            this.btnAddCourse.Size = new System.Drawing.Size(91, 23);
+            this.btnAddCourse.TabIndex = 20;
+            this.btnAddCourse.Text = "Lägg till Kurs";
+            this.btnAddCourse.UseVisualStyleBackColor = true;
+            this.btnAddCourse.Click += new System.EventHandler(this.btnAddCourse_Click);
+            // 
+            // btnAddTeacher
+            // 
+            this.btnAddTeacher.Location = new System.Drawing.Point(565, 336);
+            this.btnAddTeacher.Name = "btnAddTeacher";
+            this.btnAddTeacher.Size = new System.Drawing.Size(91, 23);
+            this.btnAddTeacher.TabIndex = 21;
+            this.btnAddTeacher.Text = "Lägg till Lärare";
+            this.btnAddTeacher.UseVisualStyleBackColor = true;
+            this.btnAddTeacher.Click += new System.EventHandler(this.btnAddTeacher_Click);
+            // 
+            // btnAddStudent
+            // 
+            this.btnAddStudent.Location = new System.Drawing.Point(662, 336);
+            this.btnAddStudent.Name = "btnAddStudent";
+            this.btnAddStudent.Size = new System.Drawing.Size(91, 23);
+            this.btnAddStudent.TabIndex = 22;
+            this.btnAddStudent.Text = "Lägg till Elev";
+            this.btnAddStudent.UseVisualStyleBackColor = true;
+            this.btnAddStudent.Click += new System.EventHandler(this.btnAddStudent_Click);
+            // 
+            // btnUpdateClassBelonging
+            // 
+            this.btnUpdateClassBelonging.Location = new System.Drawing.Point(395, 367);
+            this.btnUpdateClassBelonging.Name = "btnUpdateClassBelonging";
+            this.btnUpdateClassBelonging.Size = new System.Drawing.Size(176, 23);
+            this.btnUpdateClassBelonging.TabIndex = 23;
+            this.btnUpdateClassBelonging.Text = "Uppdatera Klass Kurstillhörigheter";
+            this.btnUpdateClassBelonging.UseVisualStyleBackColor = true;
+            this.btnUpdateClassBelonging.Click += new System.EventHandler(this.btnUpdateClassBelonging_Click);
+            // 
+            // btnRemoveCourse
+            // 
+            this.btnRemoveCourse.Location = new System.Drawing.Point(756, 367);
+            this.btnRemoveCourse.Name = "btnRemoveCourse";
+            this.btnRemoveCourse.Size = new System.Drawing.Size(74, 23);
+            this.btnRemoveCourse.TabIndex = 24;
+            this.btnRemoveCourse.Text = "Ta bort Kurs";
+            this.btnRemoveCourse.UseVisualStyleBackColor = true;
+            this.btnRemoveCourse.Click += new System.EventHandler(this.btnRemoveCourse_Click);
+            // 
+            // btnUpdateStudentClassBelongings
+            // 
+            this.btnUpdateStudentClassBelongings.Location = new System.Drawing.Point(760, 337);
+            this.btnUpdateStudentClassBelongings.Name = "btnUpdateStudentClassBelongings";
+            this.btnUpdateStudentClassBelongings.Size = new System.Drawing.Size(153, 23);
+            this.btnUpdateStudentClassBelongings.TabIndex = 25;
+            this.btnUpdateStudentClassBelongings.Text = "Uppdatera Klasstillhörigheter";
+            this.btnUpdateStudentClassBelongings.UseVisualStyleBackColor = true;
+            this.btnUpdateStudentClassBelongings.Click += new System.EventHandler(this.btnUpdateStudentClassBelongings_Click);
             // 
             // FrmCourseManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(840, 373);
-            this.Controls.Add(this.btnUpdateData);
+            this.ClientSize = new System.Drawing.Size(923, 409);
+            this.Controls.Add(this.btnUpdateStudentClassBelongings);
+            this.Controls.Add(this.btnRemoveCourse);
+            this.Controls.Add(this.btnUpdateClassBelonging);
+            this.Controls.Add(this.btnAddStudent);
+            this.Controls.Add(this.btnAddTeacher);
+            this.Controls.Add(this.btnAddCourse);
+            this.Controls.Add(this.btnRemoveTeacher);
+            this.Controls.Add(this.btnRemoveStudent);
+            this.Controls.Add(this.btnUpdateStudentBelonging);
+            this.Controls.Add(this.btnUpdateTeacherBelonging);
+            this.Controls.Add(this.btnUpdateStudent);
+            this.Controls.Add(this.btnUpdateTeacher);
+            this.Controls.Add(this.btnUpdateCourse);
+            this.Controls.Add(this.btnRefreshData);
             this.Controls.Add(this.lblTeachers);
             this.Controls.Add(this.lbxTeachers);
             this.Controls.Add(this.lbxStudents);
@@ -481,7 +637,20 @@
         private System.Windows.Forms.Label lblTeacherPhone;
         private System.Windows.Forms.TextBox tbxStudentPhoneNr;
         private System.Windows.Forms.Label lblStudentPhone;
-        private System.Windows.Forms.Button btnUpdateData;
+        private System.Windows.Forms.Button btnRefreshData;
+        private System.Windows.Forms.Button btnUpdateCourse;
+        private System.Windows.Forms.Button btnUpdateTeacher;
+        private System.Windows.Forms.Button btnUpdateStudent;
+        private System.Windows.Forms.Button btnUpdateTeacherBelonging;
+        private System.Windows.Forms.Button btnUpdateStudentBelonging;
+        private System.Windows.Forms.Button btnRemoveStudent;
+        private System.Windows.Forms.Button btnRemoveTeacher;
+        private System.Windows.Forms.Button btnAddCourse;
+        private System.Windows.Forms.Button btnAddTeacher;
+        private System.Windows.Forms.Button btnAddStudent;
+        private System.Windows.Forms.Button btnUpdateClassBelonging;
+        private System.Windows.Forms.Button btnRemoveCourse;
+        private System.Windows.Forms.Button btnUpdateStudentClassBelongings;
     }
 }
 

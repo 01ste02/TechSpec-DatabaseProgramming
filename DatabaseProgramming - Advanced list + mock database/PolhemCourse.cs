@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Courses
 {
-    class PolhemCourse
+    public class PolhemCourse
     {
         private string name;
         private string courseCode;
