@@ -134,7 +134,7 @@ namespace Courses
 
         public bool IsCourseActive (DateTime checkDate)
         {
-            if (startDate.CompareTo(checkDate) >= 0 && endDate.CompareTo(checkDate) <= 0)
+            if (DateTime.Compare(startDate, checkDate) <= 0 && DateTime.Compare(endDate, checkDate) >= 0)
             {
                 return true;
             }
