@@ -20,7 +20,8 @@ namespace DatabaseProgramming___Advanced_list___mock_database
         private List<string> classList = new List<string>();
 
         private bool isInitFinished = false;
-
+        private bool studentUpdate = false;
+        private bool classUpdate = false;
         public ChangeCourseBelongingStudent()
         {
             InitializeComponent();
@@ -210,34 +211,41 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-            MySqlConnection dbUpdateBelonging = new MySqlConnection(connectionString);
-            dbUpdateBelonging.Open();
-
-            MySqlCommand cmdInsertUpdated = null;
-
-            string tmpUpdateCmdString = "UPDATE students SET CLASS = '" + lbxClasses.SelectedItem.ToString() + "' WHERE id in (";
-
-            for (int i = 0; i < lbxStudents.SelectedIndices.Count; i++)
+            if (classUpdate)
             {
-                tmpUpdateCmdString += (lbxStudents.SelectedIndices[i] + 1).ToString() + ", ";
+                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                MySqlConnection dbUpdateBelonging = new MySqlConnection(connectionString);
+                dbUpdateBelonging.Open();
+
+                MySqlCommand cmdInsertUpdated = null;
+
+                string tmpUpdateCmdString = "UPDATE students SET CLASS = '" + lbxClasses.SelectedItem.ToString() + "' WHERE id in (";
+
+                for (int i = 0; i < lbxStudents.SelectedIndices.Count; i++)
+                {
+                    tmpUpdateCmdString += (lbxStudents.SelectedIndices[i] + 1).ToString() + ", ";
+                }
+
+                tmpUpdateCmdString = tmpUpdateCmdString.Remove(tmpUpdateCmdString.Length - 2);
+                tmpUpdateCmdString += ");";
+
+                Console.WriteLine(tmpUpdateCmdString);
+
+                cmdInsertUpdated = new MySqlCommand(tmpUpdateCmdString, dbUpdateBelonging);
+
+                int updatedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
+
+                dbUpdateBelonging.Close();
+
+                MessageBox.Show(this, "Uppdaterade klasstillhörigheter för " + updatedClassBelongings.ToString() + " elever.", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+
+                getData();
+                updateGUI();
             }
-
-            tmpUpdateCmdString = tmpUpdateCmdString.Remove(tmpUpdateCmdString.Length - 2);
-            tmpUpdateCmdString += ");";
-
-            Console.WriteLine(tmpUpdateCmdString);
-
-            cmdInsertUpdated = new MySqlCommand(tmpUpdateCmdString, dbUpdateBelonging);
-
-            int updatedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
-
-            dbUpdateBelonging.Close();
-
-            MessageBox.Show(this, "Uppdaterade klasstillhörigheter för " + updatedClassBelongings.ToString() + " elever.", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-
-            getData();
-            updateGUI();
+            else
+            {
+                MessageBox.Show(this, "Var vänlig välj en klass och tilldela sedan elever till denna.", "Fel uppdateringsordning", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -247,8 +255,11 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void lbxClasses_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isInitFinished)
+            if (isInitFinished && isMouseOverListBox(lbxClasses))
             {
+                studentUpdate = false;
+                classUpdate = true;
+
                 for (int i = 0; i < lbxStudents.Items.Count; i++)
                 {
                     lbxStudents.SetSelected(i, false);
@@ -264,12 +275,53 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
                 lbxStudents.Focus();
             }
-
         }
 
         private void lbxStudents_SelectedIndexChanged(object sender, EventArgs e)
         {
-           
+            if (isInitFinished && isMouseOverListBox(lbxStudents) && lbxStudents.SelectedIndices.Count <= 1)
+            {
+                studentUpdate = true;
+                classUpdate = false;
+
+                for (int i = 0; i < lbxClasses.Items.Count; i++)
+                {
+                    lbxClasses.SetSelected(i, false);
+                }
+
+                for (int i = 0; i < classList.Count; i++)
+                {
+                    if (studentList[lbxStudents.SelectedIndex].StudentClass == classList[i].ToString())
+                    {
+                        lbxClasses.SetSelected(i, true);
+                    }
+                }
+
+                lbxStudents.Focus();
+            }
+        }
+
+        private bool isMouseOverListBox (ListBox lbx)
+        {
+            if (lbx.ClientRectangle.Contains(lbx.PointToClient(Cursor.Position)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void btnClearSelection_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < lbxClasses.Items.Count; i++)
+            {
+                lbxClasses.SetSelected(i, false);
+            }
+
+            for (int i = 0; i < lbxStudents.Items.Count; i++)
+            {
+                lbxStudents.SetSelected(i, false);
+            }
         }
     }
 }

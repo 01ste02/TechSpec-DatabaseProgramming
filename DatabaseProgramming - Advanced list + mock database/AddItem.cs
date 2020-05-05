@@ -315,83 +315,139 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void btnUpdateClick(object sender, EventArgs e)
         {
-            string authenticationString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-            MySqlConnection addConnection = new MySqlConnection(authenticationString);
-            addConnection.Open();
-
-            MySqlCommand sqlCmd = new MySqlCommand("SELECT * FROM students", addConnection);
-
-            switch (addCase)
+            if (areInputsCorrect(addCase))
             {
-                case "student":
-                    sqlCmd = new MySqlCommand("INSERT INTO students (name, class, email, phone) VALUES ('" + tbxStudentName.Text + "', '" + tbxStudentClass.Text + "', '" + tbxStudentEmail.Text + "', '" + tbxStudentPhone.Text + "');", addConnection);
-                    break;
-                case "teacher":
-                    sqlCmd = new MySqlCommand("INSERT INTO teachers (name, code, email, phone) VALUES ('" + tbxTeacherName.Text + "', '" + tbxTeacherCode.Text + "', '" + tbxTeacherEmail.Text + "', '" + tbxTeacherPhone.Text + "');", addConnection);
-                    break;
-                case "course":
-                    sqlCmd = new MySqlCommand("INSERT INTO courses (name, code, size, start, end) VALUES ('" + tbxCourseName.Text + "', '" + tbxCourseCode.Text + "', '" + int.Parse(tbxCoursePoints.Text) + "', '" + DateTime.Parse(tbxCourseStart.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "', '" + DateTime.Parse(tbxCourseEnd.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "');", addConnection);
-                    break;
+                string authenticationString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                MySqlConnection addConnection = new MySqlConnection(authenticationString);
+                addConnection.Open();
+
+                MySqlCommand sqlCmd = new MySqlCommand("SELECT * FROM students", addConnection);
+
+                switch (addCase)
+                {
+                    case "student":
+                        sqlCmd = new MySqlCommand("INSERT INTO students (name, class, email, phone) VALUES ('" + tbxStudentName.Text + "', '" + tbxStudentClass.Text + "', '" + tbxStudentEmail.Text + "', '" + tbxStudentPhone.Text + "');", addConnection);
+                        break;
+                    case "teacher":
+                        sqlCmd = new MySqlCommand("INSERT INTO teachers (name, code, email, phone) VALUES ('" + tbxTeacherName.Text + "', '" + tbxTeacherCode.Text + "', '" + tbxTeacherEmail.Text + "', '" + tbxTeacherPhone.Text + "');", addConnection);
+                        break;
+                    case "course":
+                        sqlCmd = new MySqlCommand("INSERT INTO courses (name, code, size, start, end) VALUES ('" + tbxCourseName.Text + "', '" + tbxCourseCode.Text + "', '" + int.Parse(tbxCoursePoints.Text) + "', '" + DateTime.Parse(tbxCourseStart.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "', '" + DateTime.Parse(tbxCourseEnd.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "');", addConnection);
+                        break;
+                }
+
+                int affectedRows = sqlCmd.ExecuteNonQuery();
+                addConnection.Close();
+
+                if (addCase == "student")
+                {
+                    if (affectedRows == 1)
+                    {
+                        MessageBox.Show(this, "En elev lades till.", "Addition genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
+                    }
+                    else if (affectedRows > 1)
+                    {
+                        MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                    else if (affectedRows == 0)
+                    {
+                        MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                }
+                else if (addCase == "teacher")
+                {
+                    if (affectedRows == 1)
+                    {
+                        MessageBox.Show(this, "En lärare lades till", "Addition genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
+                    }
+                    else if (affectedRows > 1)
+                    {
+                        MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                    else if (affectedRows == 0)
+                    {
+                        MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                }
+                else if (addCase == "course")
+                {
+                    if (affectedRows == 1)
+                    {
+                        MessageBox.Show(this, "En kurs lades till", "Addition genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
+                    }
+                    else if (affectedRows > 1)
+                    {
+                        MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                    else if (affectedRows == 0)
+                    {
+                        MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                }
             }
-
-            int affectedRows = sqlCmd.ExecuteNonQuery();
-            addConnection.Close();
-
-            if (addCase == "student")
+            else
             {
-                if (affectedRows == 1)
-                {
-                    MessageBox.Show(this, "En elev lades till.", "Addition genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                }
-                else if (affectedRows > 1)
-                {
-                    MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
-                else if (affectedRows == 0)
-                {
-                    MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
-            }
-            else if (addCase == "teacher")
-            {
-                if (affectedRows == 1)
-                {
-                    MessageBox.Show(this, "En lärare lades till", "Addition genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                }
-                else if (affectedRows > 1)
-                {
-                    MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
-                else if (affectedRows == 0)
-                {
-                    MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
-            }
-            else if (addCase == "course")
-            {
-                if (affectedRows == 1)
-                {
-                    MessageBox.Show(this, "En kurs lades till", "Addition genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                }
-                else if (affectedRows > 1)
-                {
-                    MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
-                else if (affectedRows == 0)
-                {
-                    MessageBox.Show(this, "Något gick fel. Var vänlig kontakta databasadministratören.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
+                MessageBox.Show(this, "Var vänlig se till att eventuella datum och sifferfält enbart innehåller datum (enligt formatet åååå-mm-dd) eller siffror. Kontrollera även att inga fält lämnats tomma.", "Fel i inmatning", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private bool areInputsCorrect(string updateCase)
+        {
+            bool result = false;
+
+            if (updateCase == "course")
+            {
+                bool pointsCorrect = false;
+                bool startDateCorrect = false;
+                bool endDateCorrect = false;
+
+                if (!string.IsNullOrEmpty(tbxCoursePoints.Text) && !string.IsNullOrWhiteSpace(tbxCoursePoints.Text))
+                {
+                    if (int.TryParse(tbxCoursePoints.Text, out int outPut))
+                    {
+                        pointsCorrect = true;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(tbxCourseStart.Text) && !string.IsNullOrWhiteSpace(tbxCourseStart.Text))
+                {
+                    if (DateTime.TryParse(tbxCourseStart.Text, out DateTime result1))
+                    {
+                        startDateCorrect = true;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(tbxCourseEnd.Text) && !string.IsNullOrWhiteSpace(tbxCourseEnd.Text))
+                {
+                    if (DateTime.TryParse(tbxCourseEnd.Text, out DateTime result2))
+                    {
+                        endDateCorrect = true;
+                    }
+                }
+
+                result = (!string.IsNullOrEmpty(tbxCourseName.Text) && !string.IsNullOrWhiteSpace(tbxCourseName.Text) && !string.IsNullOrEmpty(tbxCourseCode.Text) && !string.IsNullOrWhiteSpace(tbxCourseCode.Text) && !string.IsNullOrEmpty(tbxCoursePoints.Text) && !string.IsNullOrWhiteSpace(tbxCoursePoints.Text) && !string.IsNullOrEmpty(tbxCourseStart.Text) && !string.IsNullOrWhiteSpace(tbxCourseStart.Text) && !string.IsNullOrEmpty(tbxCourseEnd.Text) && !string.IsNullOrWhiteSpace(tbxCourseEnd.Text) && pointsCorrect && startDateCorrect && endDateCorrect);
+            }
+            else if (updateCase == "student")
+            {
+                result = (!string.IsNullOrEmpty(tbxStudentName.Text) && !string.IsNullOrWhiteSpace(tbxStudentName.Text) && !string.IsNullOrEmpty(tbxStudentClass.Text) && !string.IsNullOrWhiteSpace(tbxStudentClass.Text) && !string.IsNullOrEmpty(tbxStudentEmail.Text) && !string.IsNullOrWhiteSpace(tbxStudentEmail.Text) && !string.IsNullOrEmpty(tbxStudentPhone.Text) && !string.IsNullOrWhiteSpace(tbxStudentPhone.Text));
+            }
+            else if (updateCase == "teacher")
+            {
+                result = (!string.IsNullOrEmpty(tbxTeacherName.Text) && !string.IsNullOrWhiteSpace(tbxTeacherName.Text) && !string.IsNullOrEmpty(tbxTeacherCode.Text) && !string.IsNullOrWhiteSpace(tbxTeacherCode.Text) && !string.IsNullOrEmpty(tbxTeacherEmail.Text) && !string.IsNullOrWhiteSpace(tbxTeacherEmail.Text) && !string.IsNullOrEmpty(tbxTeacherPhone.Text) && !string.IsNullOrWhiteSpace(tbxTeacherPhone.Text));
+            }
+
+            return result;
+        }
+
         private void btnAbortClick(object sender, EventArgs e)
         {
             this.Close();

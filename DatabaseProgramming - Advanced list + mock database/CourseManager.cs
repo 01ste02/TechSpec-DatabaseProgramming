@@ -183,36 +183,68 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void updateCourseData (List<PolhemCourse> courseList, int selectedIndex)
         {
-            tbxCourseName.Text = courseList[selectedIndex].CourseName;
-            tbxCourseCode.Text = courseList[selectedIndex].CourseCode;
-            tbxCoursePoints.Text = courseList[selectedIndex].CoursePoints.ToString();
-            tbxCourseStart.Text = courseList[selectedIndex].CourseStartDate.ToShortDateString();
-            tbxCourseEnd.Text = courseList[selectedIndex].CourseEndDate.ToShortDateString();
+            try
+            {
+                tbxCourseName.Text = courseList[selectedIndex].CourseName;
+                tbxCourseCode.Text = courseList[selectedIndex].CourseCode;
+                tbxCoursePoints.Text = courseList[selectedIndex].CoursePoints.ToString();
+                tbxCourseStart.Text = courseList[selectedIndex].CourseStartDate.ToShortDateString();
+                tbxCourseEnd.Text = courseList[selectedIndex].CourseEndDate.ToShortDateString();
 
-            if (courseList[selectedIndex].IsCourseActive(DateTime.Now))
-            {
-                tbxCourseActive.Text = "Ja";
+                if (courseList[selectedIndex].IsCourseActive(DateTime.Now))
+                {
+                    tbxCourseActive.Text = "Ja";
+                }
+                else
+                {
+                    tbxCourseActive.Text = "Nej";
+                }
             }
-            else
+            catch
             {
-                tbxCourseActive.Text = "Nej";
+                tbxCourseEnd.Text = "";
+                tbxCourseStart.Text = "";
+                tbxCoursePoints.Text = "";
+                tbxCourseCode.Text = "";
+                tbxCourseName.Text = "";
+                tbxCourseActive.Text = "";
             }
         }
 
         private void updateTeacherData (List<PolhemTeacher> teacherList, int selectedIndex)
         {
-            tbxTeacherName.Text = teacherList[selectedIndex].TeacherName;
-            tbxTeacherCode.Text = teacherList[selectedIndex].TeacherCode;
-            tbxTeacherEmail.Text = teacherList[selectedIndex].TeacherEmail;
-            tbxTeacherPhoneNr.Text = teacherList[selectedIndex].TeacherPhone;
+            try
+            {
+                tbxTeacherName.Text = teacherList[selectedIndex].TeacherName;
+                tbxTeacherCode.Text = teacherList[selectedIndex].TeacherCode;
+                tbxTeacherEmail.Text = teacherList[selectedIndex].TeacherEmail;
+                tbxTeacherPhoneNr.Text = teacherList[selectedIndex].TeacherPhone;
+            }
+            catch
+            {
+                tbxTeacherPhoneNr.Text = "";
+                tbxTeacherEmail.Text = "";
+                tbxTeacherCode.Text = "";
+                tbxTeacherName.Text = "";
+            }
         }
 
         private void updateStudentData (List<PolhemStudent> studentList, int selectedIndex)
         {
-            tbxStudentName.Text = studentList[selectedIndex].StudentName;
-            tbxStudentClass.Text = studentList[selectedIndex].StudentClass;
-            tbxStudentEmail.Text = studentList[selectedIndex].StudentEmail;
-            tbxStudentPhoneNr.Text = studentList[selectedIndex].StudentPhone;
+            try
+            {
+                tbxStudentName.Text = studentList[selectedIndex].StudentName;
+                tbxStudentClass.Text = studentList[selectedIndex].StudentClass;
+                tbxStudentEmail.Text = studentList[selectedIndex].StudentEmail;
+                tbxStudentPhoneNr.Text = studentList[selectedIndex].StudentPhone;
+            }
+            catch
+            {
+                tbxStudentName.Text = "";
+                tbxStudentClass.Text = "";
+                tbxStudentEmail.Text = "";
+                tbxStudentPhoneNr.Text = "";
+            }
         }
 
         private void updateCourseList (List<PolhemCourse> courseList)
@@ -224,6 +256,10 @@ namespace DatabaseProgramming___Advanced_list___mock_database
                 lbxCourses.Items.Add(courseList[i].CourseName);
             }
 
+            if (lbxCourses.Items.Count == 0)
+            {
+                lbxCourses.Items.Add("Inga kurser finns");
+            }
             lbxCourses.SelectedIndex = 0;
         }
 
@@ -236,6 +272,10 @@ namespace DatabaseProgramming___Advanced_list___mock_database
                 lbxTeachers.Items.Add(teacherList[i].TeacherName);
             }
 
+            if (lbxTeachers.Items.Count == 0)
+            {
+                lbxTeachers.Items.Add("Inga Lärare finns i denna Kurs");
+            }
             lbxTeachers.SelectedIndex = 0;
         }
 
@@ -246,6 +286,11 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             for (int i = 0; i < studentList.Count; i++)
             {
                 lbxStudents.Items.Add(studentList[i].StudentName);
+            }
+
+            if (lbxStudents.Items.Count == 0)
+            {
+                lbxStudents.Items.Add("Inga Elever finns i denna Kurs");
             }
 
             lbxStudents.SelectedIndex = 0;
@@ -285,18 +330,25 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void updateGUI()
         {
-            updateCourseList(courseList);
-            updateTeacherList(courseList[lbxCourses.SelectedIndex].CourseTeachers);
-            updateStudentList(courseList[lbxCourses.SelectedIndex].CourseStudents);
+            try
+            {
+                updateCourseList(courseList);
+                updateTeacherList(courseList[lbxCourses.SelectedIndex].CourseTeachers);
+                updateStudentList(courseList[lbxCourses.SelectedIndex].CourseStudents);
 
-            teacherList = courseList[lbxCourses.SelectedIndex].CourseTeachers;
-            studentList = courseList[lbxCourses.SelectedIndex].CourseStudents;
+                teacherList = courseList[lbxCourses.SelectedIndex].CourseTeachers;
+                studentList = courseList[lbxCourses.SelectedIndex].CourseStudents;
 
-            updateCourseData(courseList, lbxCourses.SelectedIndex);
-            updateTeacherData(teacherList, lbxTeachers.SelectedIndex);
-            updateStudentData(studentList, lbxStudents.SelectedIndex);
+                updateCourseData(courseList, lbxCourses.SelectedIndex);
+                updateTeacherData(teacherList, lbxTeachers.SelectedIndex);
+                updateStudentData(studentList, lbxStudents.SelectedIndex);
 
-            isInitDone = true;
+                isInitDone = true;
+            }
+            catch
+            {
+                MessageBox.Show(this, "Något gick fel under inhämtningen och uppdateringen av programmets data. Var vänlig kontakta en administratör.", "Något gick fel", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void btnRefreshData_Click(object sender, EventArgs e)
         {
@@ -372,6 +424,9 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 addItem.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
 
         private void btnAddTeacher_Click(object sender, EventArgs e)
@@ -380,6 +435,9 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 addItem.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
 
         private void btnAddStudent_Click(object sender, EventArgs e)
@@ -388,75 +446,98 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 addItem.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
 
         private void btnRemoveTeacher_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxTeachers.SelectedItem.ToString() + " från skolan?", "Ta bort lärare", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-            if (result == DialogResult.Yes)
+            if (lbxTeachers.SelectedIndices.Count == 1)
             {
-                PolhemTeacher tmpTeacher = null;
-                for (int i = 0; i < teacherList.Count; i++)
+                DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxTeachers.SelectedItem.ToString() + " från skolan?", "Ta bort lärare", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
                 {
-                    if (teacherList[i].TeacherName == lbxTeachers.SelectedItem.ToString())
+                    PolhemTeacher tmpTeacher = null;
+                    for (int i = 0; i < teacherList.Count; i++)
                     {
-                        tmpTeacher = teacherList[i];
-                        break;
+                        if (teacherList[i].TeacherName == lbxTeachers.SelectedItem.ToString())
+                        {
+                            tmpTeacher = teacherList[i];
+                            break;
+                        }
                     }
+
+                    string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                    MySqlConnection deleteConnection = new MySqlConnection(connectionString);
+                    deleteConnection.Open();
+
+                    MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM teachercourses WHERE teacher_id = (SELECT id FROM teachers WHERE name='" + tmpTeacher.TeacherName + "' AND email='" + tmpTeacher.TeacherEmail + "');", deleteConnection);
+                    MySqlCommand deleteTeacher = new MySqlCommand("DELETE FROM teachers WHERE name = '" + tmpTeacher.TeacherName + "' AND email = '" + tmpTeacher.TeacherEmail + "'; ", deleteConnection);
+
+                    int affectedCourses = deleteCmd.ExecuteNonQuery();
+                    int affectedTeachers = deleteTeacher.ExecuteNonQuery();
+
+                    deleteConnection.Close();
+
+                    MessageBox.Show(this, "Tog bort " + affectedTeachers.ToString() + " lärare, och påverkade " + affectedCourses.ToString() + " kurser.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                }
+                else
+                {
+                    MessageBox.Show(this, "Läraren har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
 
-                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-                MySqlConnection deleteConnection = new MySqlConnection(connectionString);
-                deleteConnection.Open();
-
-                MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM teachercourses WHERE teacher_id = (SELECT id FROM teachers WHERE name='" + tmpTeacher.TeacherName +"' AND email='" + tmpTeacher.TeacherEmail + "');", deleteConnection);
-                MySqlCommand deleteTeacher = new MySqlCommand("DELETE FROM teachers WHERE name = '" + tmpTeacher.TeacherName +"' AND email = '" + tmpTeacher.TeacherEmail + "'); ", deleteConnection);
-
-                int affectedCourses = deleteCmd.ExecuteNonQuery();
-                int affectedTeachers = deleteTeacher.ExecuteNonQuery();
-
-                deleteConnection.Close();
-
-                MessageBox.Show(this, "Tog bort " + affectedTeachers.ToString() + " lärare, och påverkade " + affectedCourses.ToString() + " kurser.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                getData();
+                updateGUI();
             }
             else
             {
-                MessageBox.Show(this, "Läraren har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(this, "Var vänlig välj en lärare för borttagning", "Ingen lärare vald", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
         private void btnRemoveStudent_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxStudents.SelectedItem.ToString() + " från skolan?", "Ta bort elev", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-            if (result == DialogResult.Yes)
+            if (lbxStudents.SelectedIndices.Count == 1)
             {
-                PolhemStudent tmpStudent = null;
-                for (int i = 0; i < studentList.Count; i++)
+                DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxStudents.SelectedItem.ToString() + " från skolan?", "Ta bort elev", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
                 {
-                    if (studentList[i].StudentName == lbxStudents.SelectedItem.ToString())
+                    PolhemStudent tmpStudent = null;
+                    for (int i = 0; i < studentList.Count; i++)
                     {
-                        tmpStudent = studentList[i];
-                        break;
+                        if (studentList[i].StudentName == lbxStudents.SelectedItem.ToString())
+                        {
+                            tmpStudent = studentList[i];
+                            break;
+                        }
                     }
+
+                    string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                    MySqlConnection deleteConnection = new MySqlConnection(connectionString);
+                    deleteConnection.Open();
+
+                    MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM coursestudents WHERE students_id = (SELECT id FROM students WHERE name='" + tmpStudent.StudentName + "' AND email='" + tmpStudent.StudentEmail + "');", deleteConnection);
+                    MySqlCommand deleteStudent = new MySqlCommand("DELETE FROM students WHERE name = '" + tmpStudent.StudentName + "' AND email = '" + tmpStudent.StudentEmail + "'; ", deleteConnection);
+
+                    int affectedCourses = deleteCmd.ExecuteNonQuery();
+                    int affectedTeachers = deleteStudent.ExecuteNonQuery();
+
+                    deleteConnection.Close();
+
+                    MessageBox.Show(this, "Tog bort " + affectedTeachers.ToString() + " elever, och påverkade " + affectedCourses.ToString() + " kurser.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                }
+                else
+                {
+                    MessageBox.Show(this, "Eleven har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
 
-                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-                MySqlConnection deleteConnection = new MySqlConnection(connectionString);
-                deleteConnection.Open();
-
-                MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM coursestudents WHERE students_id = (SELECT id FROM students WHERE name='" + tmpStudent.StudentName + "' AND email='" + tmpStudent.StudentEmail + "');", deleteConnection);
-                MySqlCommand deleteStudent = new MySqlCommand("DELETE FROM students WHERE name = '" + tmpStudent.StudentName + "' AND email = '" + tmpStudent.StudentEmail + "'); ", deleteConnection);
-
-                int affectedCourses = deleteCmd.ExecuteNonQuery();
-                int affectedTeachers = deleteStudent.ExecuteNonQuery();
-
-                deleteConnection.Close();
-
-                MessageBox.Show(this, "Tog bort " + affectedTeachers.ToString() + " elever, och påverkade " + affectedCourses.ToString() + " kurser.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                getData();
+                updateGUI();
             }
             else
             {
-                MessageBox.Show(this, "Eleven har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(this, "Var vänlig välj en elev för borttagning", "Ingen elev vald", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -466,6 +547,9 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 changeBelonging.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
 
         private void btnUpdateStudentBelonging_Click(object sender, EventArgs e)
@@ -474,6 +558,9 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 changeBelonging.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
 
         private void btnUpdateClassBelonging_Click(object sender, EventArgs e)
@@ -482,42 +569,55 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 changeBelonging.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
 
         private void btnRemoveCourse_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxCourses.SelectedItem.ToString() + " från skolan?", "Ta bort kurs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-            if (result == DialogResult.Yes)
+            if (lbxCourses.SelectedIndices.Count > 0)
             {
-                PolhemCourse tmpCourse = null;
-                for (int i = 0; i < courseList.Count; i++)
+                DialogResult result = MessageBox.Show(this, "Är du säker på att du vill ta bort " + lbxCourses.SelectedItem.ToString() + " från skolan?", "Ta bort kurs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
                 {
-                    if (courseList[i].CourseName == lbxCourses.SelectedItem.ToString())
+                    PolhemCourse tmpCourse = null;
+                    for (int i = 0; i < courseList.Count; i++)
                     {
-                        tmpCourse = courseList[i];
-                        break;
+                        if (courseList[i].CourseName == lbxCourses.SelectedItem.ToString())
+                        {
+                            tmpCourse = courseList[i];
+                            break;
+                        }
                     }
+
+                    string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                    MySqlConnection deleteConnection = new MySqlConnection(connectionString);
+                    deleteConnection.Open();
+
+                    MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM coursestudents WHERE courses_id = (SELECT id FROM courses WHERE name='" + tmpCourse.CourseName + "' AND code='" + tmpCourse.CourseCode + "');", deleteConnection);
+                    MySqlCommand deleteCmd2 = new MySqlCommand("DELETE FROM teachercourses WHERE course_id = (SELECT id FROM courses WHERE name='" + tmpCourse.CourseName + "' AND code='" + tmpCourse.CourseCode + "');", deleteConnection);
+                    MySqlCommand deleteCourse = new MySqlCommand("DELETE FROM courses WHERE name = '" + tmpCourse.CourseName + "' AND code = '" + tmpCourse.CourseCode + "'; ", deleteConnection);
+
+                    int affectedStudents = deleteCmd.ExecuteNonQuery();
+                    int affectedTeachers = deleteCmd2.ExecuteNonQuery();
+                    int affectedCourses = deleteCourse.ExecuteNonQuery();
+
+                    deleteConnection.Close();
+
+                    MessageBox.Show(this, "Tog bort " + affectedCourses.ToString() + " kurser, och påverkade " + affectedTeachers.ToString() + " lärare och " + affectedStudents.ToString() + " elever.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                }
+                else
+                {
+                    MessageBox.Show(this, "Kursen har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
 
-                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-                MySqlConnection deleteConnection = new MySqlConnection(connectionString);
-                deleteConnection.Open();
-
-                MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM coursestudents WHERE courses_id = (SELECT id FROM courses WHERE name='" + tmpCourse.CourseName + "' AND code='" + tmpCourse.CourseCode + "');", deleteConnection);
-                MySqlCommand deleteCmd2 = new MySqlCommand("DELETE FROM teachercourses WHERE course_id = (SELECT id FROM courses WHERE name='" + tmpCourse.CourseName + "' AND code='" + tmpCourse.CourseCode + "');", deleteConnection);
-                MySqlCommand deleteCourse = new MySqlCommand("DELETE FROM courses WHERE name = '" + tmpCourse.CourseName + "' AND code = '" + tmpCourse.CourseCode + "'); ", deleteConnection);
-
-                int affectedStudents = deleteCmd.ExecuteNonQuery();
-                int affectedTeachers = deleteCmd2.ExecuteNonQuery();
-                int affectedCourses = deleteCourse.ExecuteNonQuery();
-
-                deleteConnection.Close();
-
-                MessageBox.Show(this, "Tog bort " + affectedCourses.ToString() + " kurser, och påverkade " + affectedTeachers.ToString() + " lärare och " + affectedStudents.ToString() + " elever.", "Borttagning genomförd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                getData();
+                updateGUI();
             }
             else
             {
-                MessageBox.Show(this, "Kursen har inte blivit borttagen.", "Borttagning avbruten", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(this, "Var vänlig välj en kurs för borttagning", "Ingen kurs vald", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -527,6 +627,9 @@ namespace DatabaseProgramming___Advanced_list___mock_database
             {
                 changeBelongingClass.ShowDialog();
             }
+
+            getData();
+            updateGUI();
         }
     }
 }

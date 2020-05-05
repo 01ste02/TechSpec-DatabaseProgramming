@@ -177,6 +177,9 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void updateGUI ()
         {
+            lbxCourses.Items.Clear();
+            lbxItemOne.Items.Clear();
+
             for (int i = 0; i < courseList.Count; i++)
             {
                 lbxCourses.Items.Add(courseList[i].CourseName);
@@ -296,107 +299,139 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-            MySqlConnection dbUpdateBelonging = new MySqlConnection(connectionString);
-            dbUpdateBelonging.Open();
-
-            MySqlCommand cmdRemoveAll = null;
-            MySqlCommand cmdInsertUpdated = null;
-
-            if (belongingUpdateFor == "student")
+            if (lbxItemOne.SelectedIndices.Count > 0)
             {
-                cmdRemoveAll = new MySqlCommand("DELETE FROM coursestudents WHERE students_id = (SELECT id FROM students WHERE name='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentName + "' AND email='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentEmail + "');", dbUpdateBelonging);
+                string connectionString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                MySqlConnection dbUpdateBelonging = new MySqlConnection(connectionString);
+                dbUpdateBelonging.Open();
 
-                string tmpCmdString = "INSERT INTO coursestudents (courses_id, students_id) VALUES";
+                MySqlCommand cmdRemoveAll = null;
+                MySqlCommand cmdInsertUpdated = null;
 
-                for (int i = 0; i < lbxCourses.SelectedIndices.Count; i++)
+                if (belongingUpdateFor == "student")
                 {
-                    tmpCmdString += " (" + (lbxCourses.SelectedIndices[i] + 1).ToString() + ", (SELECT id FROM students WHERE name='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentName + "' AND email='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentEmail + "'))";
+                    cmdRemoveAll = new MySqlCommand("DELETE FROM coursestudents WHERE students_id = (SELECT id FROM students WHERE name='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentName + "' AND email='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentEmail + "');", dbUpdateBelonging);
 
-                    if (i < (lbxCourses.SelectedIndices.Count - 1))
+                    string tmpCmdString = "INSERT INTO coursestudents (courses_id, students_id) VALUES";
+
+                    for (int i = 0; i < lbxCourses.SelectedIndices.Count; i++)
                     {
-                        tmpCmdString += ",";
-                    }
-                }
+                        tmpCmdString += " (" + (lbxCourses.SelectedIndices[i] + 1).ToString() + ", (SELECT id FROM students WHERE name='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentName + "' AND email='" + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentEmail + "'))";
 
-                tmpCmdString += ";";
-
-                Console.WriteLine(tmpCmdString);
-                cmdInsertUpdated = new MySqlCommand(tmpCmdString, dbUpdateBelonging);
-
-                int removedClassBelongings = cmdRemoveAll.ExecuteNonQuery();
-                int addedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
-
-                dbUpdateBelonging.Close();
-
-                MessageBox.Show(this, "Tog bort " + removedClassBelongings.ToString() + " klasstillhörigheter och lade till " + addedClassBelongings.ToString() + " klasstillhörigheter för " + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentName, "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-            }
-            else if (belongingUpdateFor == "teacher")
-            {
-                cmdRemoveAll = new MySqlCommand("DELETE FROM teachercourses WHERE teacher_id = (SELECT id FROM teachers WHERE name='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherName + "' AND email='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherEmail + "');", dbUpdateBelonging);
-
-                string tmpCmdString = "INSERT INTO teachercourses (teacher_id, course_id) VALUES";
-
-                for (int i = 0; i < lbxCourses.SelectedIndices.Count; i++)
-                {
-                    tmpCmdString += " ((SELECT id FROM teachers WHERE name='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherName + "' AND email='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherEmail + "'), " + (lbxCourses.SelectedIndices[i] + 1).ToString() + ")";
-
-                    if (i < (lbxCourses.SelectedIndices.Count - 1))
-                    {
-                        tmpCmdString += ",";
-                    }
-                }
-
-                tmpCmdString += ";";
-
-                Console.WriteLine(tmpCmdString);
-                cmdInsertUpdated = new MySqlCommand(tmpCmdString, dbUpdateBelonging);
-
-                int removedClassBelongings = cmdRemoveAll.ExecuteNonQuery();
-                int addedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
-
-                dbUpdateBelonging.Close();
-
-                MessageBox.Show(this, "Tog bort " + removedClassBelongings.ToString() + " klasstillhörigheter och lade till " + addedClassBelongings.ToString() + " klasstillhörigheter för " + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherName, "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-            }
-            else if (belongingUpdateFor == "class")
-            {
-                cmdRemoveAll = new MySqlCommand("DELETE FROM coursestudents WHERE students_id in (SELECT id FROM students WHERE class='" + classList[findClassIndex(lbxItemOne.SelectedItem.ToString())] + "');", dbUpdateBelonging);
-
-                string tmpCmdString = "INSERT INTO coursestudents (courses_id, students_id) VALUES";
-                for (int i = 0; i < lbxCourses.SelectedIndices.Count; i++)
-                {
-                    for (int j = 0; j < studentList.Count; j++)
-                    {
-                        if (studentList[j].StudentClass == classList[findClassIndex(lbxItemOne.SelectedItem.ToString())])
+                        if (i < (lbxCourses.SelectedIndices.Count - 1))
                         {
-                            tmpCmdString += " (" + (lbxCourses.SelectedIndices[i] + 1).ToString() + ", (SELECT id FROM students WHERE name='" + studentList[j].StudentName + "' AND email='" + studentList[j].StudentEmail + "')),";
+                            tmpCmdString += ",";
                         }
                     }
+
+                    tmpCmdString += ";";
+
+                    Console.WriteLine(tmpCmdString);
+                    cmdInsertUpdated = new MySqlCommand(tmpCmdString, dbUpdateBelonging);
+
+                    int removedClassBelongings = cmdRemoveAll.ExecuteNonQuery();
+
+                    int addedClassBelongings = 0;
+                    if (lbxCourses.SelectedIndices.Count >= 1)
+                    {
+                        addedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
+                    }
+
+                    dbUpdateBelonging.Close();
+
+                    MessageBox.Show(this, "Tog bort " + removedClassBelongings.ToString() + " klasstillhörigheter och lade till " + addedClassBelongings.ToString() + " klasstillhörigheter för " + studentList[findStudentIndex(lbxItemOne.SelectedItem.ToString())].StudentName, "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
+                else if (belongingUpdateFor == "teacher")
+                {
+                    cmdRemoveAll = new MySqlCommand("DELETE FROM teachercourses WHERE teacher_id = (SELECT id FROM teachers WHERE name='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherName + "' AND email='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherEmail + "');", dbUpdateBelonging);
+
+                    string tmpCmdString = "INSERT INTO teachercourses (teacher_id, course_id) VALUES";
+
+                    for (int i = 0; i < lbxCourses.SelectedIndices.Count; i++)
+                    {
+                        tmpCmdString += " ((SELECT id FROM teachers WHERE name='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherName + "' AND email='" + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherEmail + "'), " + (lbxCourses.SelectedIndices[i] + 1).ToString() + ")";
+
+                        if (i < (lbxCourses.SelectedIndices.Count - 1))
+                        {
+                            tmpCmdString += ",";
+                        }
+                    }
+
+                    tmpCmdString += ";";
+
+                    Console.WriteLine(tmpCmdString);
+                    cmdInsertUpdated = new MySqlCommand(tmpCmdString, dbUpdateBelonging);
+
+                    int removedClassBelongings = cmdRemoveAll.ExecuteNonQuery();
+
+                    int addedClassBelongings = 0;
+                    if (lbxCourses.SelectedIndices.Count >= 1)
+                    {
+                        addedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
+                    }
+
+                    dbUpdateBelonging.Close();
+
+                    MessageBox.Show(this, "Tog bort " + removedClassBelongings.ToString() + " klasstillhörigheter och lade till " + addedClassBelongings.ToString() + " klasstillhörigheter för " + teacherList[findTeacherIndex(lbxItemOne.SelectedItem.ToString())].TeacherName, "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
+                else if (belongingUpdateFor == "class")
+                {
+                    cmdRemoveAll = new MySqlCommand("DELETE FROM coursestudents WHERE students_id in (SELECT id FROM students WHERE class='" + classList[findClassIndex(lbxItemOne.SelectedItem.ToString())] + "');", dbUpdateBelonging);
+
+                    string tmpCmdString = "INSERT INTO coursestudents (courses_id, students_id) VALUES";
+                    for (int i = 0; i < lbxCourses.SelectedIndices.Count; i++)
+                    {
+                        for (int j = 0; j < studentList.Count; j++)
+                        {
+                            if (studentList[j].StudentClass == classList[findClassIndex(lbxItemOne.SelectedItem.ToString())])
+                            {
+                                tmpCmdString += " (" + (lbxCourses.SelectedIndices[i] + 1).ToString() + ", (SELECT id FROM students WHERE name='" + studentList[j].StudentName + "' AND email='" + studentList[j].StudentEmail + "')),";
+                            }
+                        }
+                    }
+
+                    tmpCmdString = tmpCmdString.Remove(tmpCmdString.Length - 1);
+                    tmpCmdString += ";";
+
+                    Console.WriteLine(tmpCmdString);
+
+                    cmdInsertUpdated = new MySqlCommand(tmpCmdString, dbUpdateBelonging);
+
+                    int removedClassBelongings = cmdRemoveAll.ExecuteNonQuery();
+
+                    int addedClassBelongings = 0;
+                    if (lbxCourses.SelectedIndices.Count >= 1)
+                    {
+                        addedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
+                    }
+
+                    dbUpdateBelonging.Close();
+
+                    MessageBox.Show(this, "Tog bort " + removedClassBelongings.ToString() + " klasstillhörigheter och lade till " + addedClassBelongings.ToString() + " klasstillhörigheter för " + classList[findClassIndex(lbxItemOne.SelectedItem.ToString())], "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
 
-                tmpCmdString = tmpCmdString.Remove(tmpCmdString.Length - 1);
-                tmpCmdString += ";";
-
-                Console.WriteLine(tmpCmdString);
-
-                cmdInsertUpdated = new MySqlCommand(tmpCmdString, dbUpdateBelonging);
-
-                int removedClassBelongings = cmdRemoveAll.ExecuteNonQuery();
-                int addedClassBelongings = cmdInsertUpdated.ExecuteNonQuery();
-
-                dbUpdateBelonging.Close();
-
-                MessageBox.Show(this, "Tog bort " + removedClassBelongings.ToString() + " klasstillhörigheter och lade till " + addedClassBelongings.ToString() + " klasstillhörigheter för " + classList[findClassIndex(lbxItemOne.SelectedItem.ToString())], "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                getData();
+                updateGUI();
             }
-
-            getData();
-            updateGUI();
+            else
+            {
+                MessageBox.Show(this, "Var vänlig välj ett föremål att uppdatera.", "Inga val gjorda", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private bool isMouseOverListBox(ListBox lbx)
+        {
+            if (lbx.ClientRectangle.Contains(lbx.PointToClient(Cursor.Position)))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
