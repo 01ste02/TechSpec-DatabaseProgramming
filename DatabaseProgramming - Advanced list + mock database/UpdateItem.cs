@@ -5,7 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Courses;
@@ -144,6 +146,10 @@ namespace DatabaseProgramming___Advanced_list___mock_database
                     tbxStudentEmail.Text = student.StudentEmail;
                     tbxStudentName.Text = student.StudentName;
                     tbxStudentPhone.Text = student.StudentPhone;
+
+                    tbxStudentEmail.TextChanged += emailUpdated;
+                    tbxStudentClass.TextChanged += classUpdated;
+                    tbxStudentName.TextChanged += nameUpdated;
                     break;
 
                 case "teacher":
@@ -226,6 +232,10 @@ namespace DatabaseProgramming___Advanced_list___mock_database
                     tbxTeacherEmail.Text = teacher.TeacherEmail;
                     tbxTeacherName.Text = teacher.TeacherName;
                     tbxTeacherPhone.Text = teacher.TeacherPhone;
+
+                    tbxTeacherEmail.TextChanged += emailUpdated;
+                    tbxTeacherCode.TextChanged += codeUpdated;
+                    tbxTeacherName.TextChanged += nameUpdated;
                     break;
 
                 case "course":
@@ -335,94 +345,124 @@ namespace DatabaseProgramming___Advanced_list___mock_database
 
         private void btnUpdateClick(object sender, EventArgs e)
         {
-            if (areInputsCorrect(updateCase))
+            if (areInputsCorrect(updateCase, out string errorMessage))
             {
-                string authenticationString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
-                MySqlConnection updateConnection = new MySqlConnection(authenticationString);
-                updateConnection.Open();
-
-                MySqlCommand sqlCmd = new MySqlCommand("SELECT * FROM students", updateConnection);
-
-                switch (updateCase)
+                if (errorMessage == "")
                 {
-                    case "student":
-                        sqlCmd = new MySqlCommand("UPDATE students SET name = '" + tbxStudentName.Text + "', class = '" + tbxStudentClass.Text + "', email = '" + tbxStudentEmail.Text + "', phone = '" + tbxStudentPhone.Text + "' WHERE name = '" + studentData.StudentName + "';", updateConnection);
-                        break;
-                    case "teacher":
-                        sqlCmd = new MySqlCommand("UPDATE teachers SET name = '" + tbxTeacherName.Text + "', code = '" + tbxTeacherCode.Text + "', email = '" + tbxTeacherEmail.Text + "', phone = '" + tbxTeacherPhone.Text + "' WHERE name = '" + teacherData.TeacherName + "';", updateConnection);
-                        break;
-                    case "course":
-                        sqlCmd = new MySqlCommand("UPDATE courses SET name = '" + tbxCourseName.Text + "', code = '" + tbxCourseCode.Text + "', size = '" + int.Parse(tbxCoursePoints.Text) + "', start = '" + DateTime.Parse(tbxCourseStart.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "', end = '" + DateTime.Parse(tbxCourseEnd.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "' WHERE name = '" + courseData.CourseName + "';", updateConnection);
-                        break;
+                    string authenticationString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+                    MySqlConnection updateConnection = new MySqlConnection(authenticationString);
+                    updateConnection.Open();
+
+                    MySqlCommand sqlCmd = new MySqlCommand("SELECT * FROM students", updateConnection);
+
+                    switch (updateCase)
+                    {
+                        case "student":
+                            sqlCmd = new MySqlCommand("UPDATE students SET name = '" + tbxStudentName.Text + "', class = '" + tbxStudentClass.Text + "', email = '" + tbxStudentEmail.Text + "', phone = '" + tbxStudentPhone.Text + "' WHERE name = '" + studentData.StudentName + "';", updateConnection);
+                            break;
+                        case "teacher":
+                            sqlCmd = new MySqlCommand("UPDATE teachers SET name = '" + tbxTeacherName.Text + "', code = '" + tbxTeacherCode.Text + "', email = '" + tbxTeacherEmail.Text + "', phone = '" + tbxTeacherPhone.Text + "' WHERE name = '" + teacherData.TeacherName + "';", updateConnection);
+                            break;
+                        case "course":
+                            sqlCmd = new MySqlCommand("UPDATE courses SET name = '" + tbxCourseName.Text + "', code = '" + tbxCourseCode.Text + "', size = '" + int.Parse(tbxCoursePoints.Text) + "', start = '" + DateTime.Parse(tbxCourseStart.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "', end = '" + DateTime.Parse(tbxCourseEnd.Text).ToString(CultureInfo.InvariantCulture.DateTimeFormat.SortableDateTimePattern) + "' WHERE name = '" + courseData.CourseName + "';", updateConnection);
+                            break;
+                    }
+
+                    int affectedRows = sqlCmd.ExecuteNonQuery();
+                    updateConnection.Close();
+
+                    if (updateCase == "student")
+                    {
+                        if (affectedRows == 1)
+                        {
+                            MessageBox.Show(this, "En elev uppdaterades", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close();
+                        }
+                        else if (affectedRows > 1)
+                        {
+                            MessageBox.Show(this, "Mer än en elev uppdaterades. Om detta inte var meningen så bör du kontakta databasadministratören.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                        else if (affectedRows == 0)
+                        {
+                            MessageBox.Show(this, "Ingen elev uppdaterades. Försök igen.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                    }
+                    else if (updateCase == "teacher")
+                    {
+                        if (affectedRows == 1)
+                        {
+                            MessageBox.Show(this, "En lärare uppdaterades", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close();
+                        }
+                        else if (affectedRows > 1)
+                        {
+                            MessageBox.Show(this, "Mer än en lärare uppdaterades. Om detta inte var meningen så bör du kontakta databasadministratören.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                        else if (affectedRows == 0)
+                        {
+                            MessageBox.Show(this, "Ingen lärare uppdaterades. Försök igen.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                    }
+                    else if (updateCase == "course")
+                    {
+                        if (affectedRows == 1)
+                        {
+                            MessageBox.Show(this, "En kurs uppdaterades", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close();
+                        }
+                        else if (affectedRows > 1)
+                        {
+                            MessageBox.Show(this, "Mer än en kurs uppdaterades. Om detta inte var meningen så bör du kontakta databasadministratören.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                        else if (affectedRows == 0)
+                        {
+                            MessageBox.Show(this, "Ingen kurs uppdaterades. Försök igen.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                    }
                 }
-
-                int affectedRows = sqlCmd.ExecuteNonQuery();
-                updateConnection.Close();
-
-                if (updateCase == "student")
+                else if (errorMessage == "alreadyExists")
                 {
-                    if (affectedRows == 1)
-                    {
-                        MessageBox.Show(this, "En elev uppdaterades", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Close();
-                    }
-                    else if (affectedRows > 1)
-                    {
-                        MessageBox.Show(this, "Mer än en elev uppdaterades. Om detta inte var meningen så bör du kontakta databasadministratören.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        this.Close();
-                    }
-                    else if (affectedRows == 0)
-                    {
-                        MessageBox.Show(this, "Ingen elev uppdaterades. Försök igen.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        this.Close();
-                    }
+                    MessageBox.Show(this, "Inga förändringar känndes av.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else if (updateCase == "teacher")
+                else if (errorMessage == "emailIncorrect")
                 {
-                    if (affectedRows == 1)
+                    MessageBox.Show(this, "Vänligen kontrollera mailadressen.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    if (updateCase == "student")
                     {
-                        MessageBox.Show(this, "En lärare uppdaterades", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Close();
+                        tbxStudentEmail.BackColor = Color.MistyRose;
+                        tbxStudentEmail.Focus();
                     }
-                    else if (affectedRows > 1)
+                    else if (updateCase == "teacher")
                     {
-                        MessageBox.Show(this, "Mer än en lärare uppdaterades. Om detta inte var meningen så bör du kontakta databasadministratören.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        this.Close();
-                    }
-                    else if (affectedRows == 0)
-                    {
-                        MessageBox.Show(this, "Ingen lärare uppdaterades. Försök igen.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        this.Close();
-                    }
-                }
-                else if (updateCase == "course")
-                {
-                    if (affectedRows == 1)
-                    {
-                        MessageBox.Show(this, "En kurs uppdaterades", "Uppdatering genomförd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Close();
-                    }
-                    else if (affectedRows > 1)
-                    {
-                        MessageBox.Show(this, "Mer än en kurs uppdaterades. Om detta inte var meningen så bör du kontakta databasadministratören.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        this.Close();
-                    }
-                    else if (affectedRows == 0)
-                    {
-                        MessageBox.Show(this, "Ingen kurs uppdaterades. Försök igen.", "Uppdatering misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        this.Close();
+                        tbxTeacherEmail.BackColor = Color.MistyRose;
+                        tbxTeacherEmail.Focus();
                     }
                 }
             }
             else
             {
-                MessageBox.Show(this, "Var vänlig se till att eventuella datum och sifferfält enbart innehåller datum (enligt formatet åååå-mm-dd) eller siffror. Kontrollera även att inga fält lämnats tomma.", "Fel i inmatning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (errorMessage == "alreadyExists")
+                {
+                    MessageBox.Show(this, "Inga förändringar känndes av.", "Addition misslyckades", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show(this, "Var vänlig se till att eventuella datum och sifferfält enbart innehåller datum (enligt formatet åååå-mm-dd) eller siffror. Kontrollera även att inga fält lämnats tomma.", "Fel i inmatning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        private bool areInputsCorrect (string updateCase)
+        private bool areInputsCorrect (string updateCase, out string errorMessage)
         {
             bool result = false;
+            errorMessage = "";
 
             if (updateCase == "course")
             {
@@ -454,19 +494,168 @@ namespace DatabaseProgramming___Advanced_list___mock_database
                     }
                 }
 
-                result = (!string.IsNullOrEmpty(tbxCourseName.Text) && !string.IsNullOrWhiteSpace(tbxCourseName.Text) && !string.IsNullOrEmpty(tbxCourseCode.Text) && !string.IsNullOrWhiteSpace(tbxCourseCode.Text) && !string.IsNullOrEmpty(tbxCoursePoints.Text) && !string.IsNullOrWhiteSpace(tbxCoursePoints.Text) && !string.IsNullOrEmpty(tbxCourseStart.Text) && !string.IsNullOrWhiteSpace(tbxCourseStart.Text) && !string.IsNullOrEmpty(tbxCourseEnd.Text) && !string.IsNullOrWhiteSpace(tbxCourseEnd.Text) && pointsCorrect && startDateCorrect && endDateCorrect);
+
+                if (!string.IsNullOrEmpty(tbxCourseName.Text) && !string.IsNullOrWhiteSpace(tbxCourseName.Text) && !string.IsNullOrEmpty(tbxCourseCode.Text) && !string.IsNullOrWhiteSpace(tbxCourseCode.Text) && !string.IsNullOrEmpty(tbxCoursePoints.Text) && !string.IsNullOrWhiteSpace(tbxCoursePoints.Text) && !string.IsNullOrEmpty(tbxCourseStart.Text) && !string.IsNullOrWhiteSpace(tbxCourseStart.Text) && !string.IsNullOrEmpty(tbxCourseEnd.Text) && !string.IsNullOrWhiteSpace(tbxCourseEnd.Text) && pointsCorrect && startDateCorrect && endDateCorrect)
+                {
+                    PolhemCourse tmpCourse = new PolhemCourse(tbxCourseName.Text, tbxCourseCode.Text, int.Parse(tbxCoursePoints.Text), DateTime.Parse(tbxCourseStart.Text), DateTime.Parse(tbxCourseEnd.Text));
+                    if (!doesItemExist("course", null, null, tmpCourse))
+                    {
+                        result = true;
+                    }
+                    else
+                    {
+                        errorMessage = "alreadyExists";
+                    }
+                }
             }
             else if (updateCase == "student")
             {
-                result = (!string.IsNullOrEmpty(tbxStudentName.Text) && !string.IsNullOrWhiteSpace(tbxStudentName.Text) && !string.IsNullOrEmpty(tbxStudentClass.Text) && !string.IsNullOrWhiteSpace(tbxStudentClass.Text) && !string.IsNullOrEmpty(tbxStudentEmail.Text) && !string.IsNullOrWhiteSpace(tbxStudentEmail.Text) && !string.IsNullOrEmpty(tbxStudentPhone.Text) && !string.IsNullOrWhiteSpace(tbxStudentPhone.Text));
+                if (!string.IsNullOrEmpty(tbxStudentName.Text) && !string.IsNullOrWhiteSpace(tbxStudentName.Text) && !string.IsNullOrEmpty(tbxStudentClass.Text) && !string.IsNullOrWhiteSpace(tbxStudentClass.Text) && !string.IsNullOrEmpty(tbxStudentEmail.Text) && !string.IsNullOrWhiteSpace(tbxStudentEmail.Text) && !string.IsNullOrEmpty(tbxStudentPhone.Text) && !string.IsNullOrWhiteSpace(tbxStudentPhone.Text) && Regex.IsMatch(tbxStudentName.Text, "^[a-zA-Z åÅäÄöÖ-]*$") && Regex.IsMatch(tbxStudentClass.Text, "^[A-ZÅÄÖ0-9]*$"))
+                {
+                    PolhemStudent tmpStudent = new PolhemStudent(tbxStudentName.Text, tbxStudentClass.Text, tbxStudentEmail.Text, tbxStudentPhone.Text);
+                    if (!doesItemExist("student", tmpStudent))
+                    {
+                        try
+                        {
+                            MailAddress tmpEmail = new MailAddress(tbxStudentEmail.Text);
+                            result = true;
+                        }
+                        catch 
+                        {
+                            errorMessage = "emailIncorrect";
+                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        errorMessage = "alreadyExists";
+                    }
+                }
             }
             else if (updateCase == "teacher")
             {
-                result = (!string.IsNullOrEmpty(tbxTeacherName.Text) && !string.IsNullOrWhiteSpace(tbxTeacherName.Text) && !string.IsNullOrEmpty(tbxTeacherCode.Text) && !string.IsNullOrWhiteSpace(tbxTeacherCode.Text) && !string.IsNullOrEmpty(tbxTeacherEmail.Text) && !string.IsNullOrWhiteSpace(tbxTeacherEmail.Text) && !string.IsNullOrEmpty(tbxTeacherPhone.Text) && !string.IsNullOrWhiteSpace(tbxTeacherPhone.Text));
+                if (!string.IsNullOrEmpty(tbxTeacherName.Text) && !string.IsNullOrWhiteSpace(tbxTeacherName.Text) && !string.IsNullOrEmpty(tbxTeacherCode.Text) && !string.IsNullOrWhiteSpace(tbxTeacherCode.Text) && !string.IsNullOrEmpty(tbxTeacherEmail.Text) && !string.IsNullOrWhiteSpace(tbxTeacherEmail.Text) && !string.IsNullOrEmpty(tbxTeacherPhone.Text) && !string.IsNullOrWhiteSpace(tbxTeacherPhone.Text) && Regex.IsMatch(tbxTeacherName.Text, "^[a-zA-Z åÅäÄöÖ-]*$") && Regex.IsMatch(tbxTeacherCode.Text, "^[A-ZÅÄÖ]*$"))
+                {
+                    PolhemTeacher tmpTeacher = new PolhemTeacher(tbxTeacherName.Text, tbxTeacherCode.Text, tbxTeacherEmail.Text, tbxTeacherPhone.Text);
+                    if (!doesItemExist("teacher", null, tmpTeacher))
+                    {
+                        try
+                        {
+                            MailAddress tmpEmail = new MailAddress(tbxTeacherEmail.Text);
+                            result = true;
+                        }
+                        catch 
+                        {
+                            errorMessage = "emailIncorrect";
+                        }
+                    }
+                    else
+                    {
+                        errorMessage = "alreadyExists";
+                    }
+                }
             }
 
             return result;
         }
+
+        private bool doesItemExist(string updateCase, PolhemStudent student = null, PolhemTeacher teacher = null, PolhemCourse course = null)
+        {
+            bool itemExists = true;
+
+            string authenticationString = "server=192.168.2.209; port=3306; " + "database=School; uid=DataDennisCunt7; pwd=MicrophoneRedKlyft67#;";
+            MySqlConnection testConnection = new MySqlConnection(authenticationString);
+            testConnection.Open();
+
+            MySqlCommand testCommand = new MySqlCommand("SELECT * FROM tables;", testConnection);
+
+            if (updateCase == "teacher")
+            {
+                testCommand = new MySqlCommand("SELECT * FROM teachers WHERE name='" + teacher.TeacherName + "' AND code='" + teacher.TeacherCode + "' AND email='" + teacher.TeacherEmail + "' AND phone='" + teacher.TeacherPhone + "';", testConnection);
+            }
+            else if (updateCase == "student")
+            {
+                testCommand = new MySqlCommand("SELECT * FROM students WHERE name='" + student.StudentName + "' AND email='" + student.StudentEmail + "' AND class='" + student.StudentClass + "' AND phone='" + student.StudentPhone + "';", testConnection);
+            }
+            else if (updateCase == "course")
+            {
+                testCommand = new MySqlCommand("SELECT * FROM courses WHERE name='" + course.CourseName + "' AND code='" + course.CourseCode + "' AND size='" + course.CoursePoints + "' AND start='" + course.CourseStartDate + "' AND end='" + course.CourseEndDate + "';", testConnection);
+            }
+
+            int affectedRows = testCommand.ExecuteNonQuery();
+
+            if (affectedRows <= 0)
+            {
+                itemExists = false;
+            }
+            else
+            {
+                itemExists = true;
+            }
+            return itemExists;
+        }
+
+        private void emailUpdated(object sender, EventArgs e)
+        {
+            TextBox senderBox = ((TextBox)sender);
+            try
+            {
+                MailAddress tmpMail = new MailAddress(senderBox.Text);
+                senderBox.BackColor = SystemColors.Window;
+                senderBox.Focus();
+            }
+            catch 
+            {
+                senderBox.BackColor = Color.MistyRose;
+                senderBox.Focus();
+            }
+        }
+
+        private void nameUpdated(object sender, EventArgs e)
+        {
+            TextBox senderBox = ((TextBox)sender);
+            if (Regex.IsMatch(senderBox.Text, "^[a-zA-Z åÅäÄöÖ]*$"))
+            {
+                senderBox.BackColor = SystemColors.Window;
+                senderBox.Focus();
+            }
+            else
+            {
+                senderBox.BackColor = Color.MistyRose;
+                senderBox.Focus();
+            }
+        }
+
+        private void codeUpdated(object sender, EventArgs e)
+        {
+            TextBox senderBox = ((TextBox)sender);
+            if (Regex.IsMatch(senderBox.Text, "^[A-ZÅÄÖ]*$"))
+            {
+                senderBox.BackColor = SystemColors.Window;
+                senderBox.Focus();
+            }
+            else
+            {
+                senderBox.BackColor = Color.MistyRose;
+                senderBox.Focus();
+            }
+        }
+
+        private void classUpdated(object sender, EventArgs e)
+        {
+            TextBox senderBox = ((TextBox)sender);
+            if (Regex.IsMatch(senderBox.Text, "^[A-ZÅÄÖ0-9]*$"))
+            {
+                senderBox.BackColor = SystemColors.Window;
+                senderBox.Focus();
+            }
+            else
+            {
+                senderBox.BackColor = Color.MistyRose;
+                senderBox.Focus();
+            }
+        }
+
         private void btnAbortClick (object sender, EventArgs e)
         {
             this.Close();
